@@ -4,53 +4,32 @@ const moment = require('moment');
 
 const parser = new xml2js.Parser();
 
-const csvWriter = require('csv-writer').createObjectCsvWriter({
-    path: './output/csv/offers_latest.csv',
-    header: [
-        {id: 'id', title: 'id'},
-        {id: 'available', title: 'available'},
-        {id: 'url', title: 'url'},
-        {id: 'price', title: 'price'},
-        {id: 'currencyId', title: 'currencyId'},
-        {id: 'categoryId', title: 'categoryId'},
-        {id: 'delivery', title: 'delivery'},
-        {id: 'name', title: 'name'},
-        {id: 'description', title: 'description'},
-        {id: 'priceRetail', title: 'priceRetail'},
-        {id: 'vendor', title: 'vendor'},
-        {id: 'article', title: 'article'},
-        {id: 'picture', title: 'picture'},
-        {id: 'barcode', title: 'barcode'},
-        {id: 'adult', title: 'adult'},
-        {id: 'sizes', title: 'sizes'},
-    ]
-});
+const settings = require('./settings/settings');
+
+console.log(settings.csvSettings);
+
+const csvWriter = require('csv-writer').createObjectCsvWriter(settings.csvSettings);
 
 class EroItem {
     constructor(item){
+        let that = this;
+        settings.headers.forEach(function (header) {
+                try {
+                    if(item[header] && Array.isArray(item[header])){
+                        that[header] = item[header][0];
+                    }
+                } catch (e) {
+                    console.error('Странная ошибка',e);
+                }
+            }
+
+        );
+
         this.id = item['$'].id;
         this.available = item['$'].available;
-        this.url = item.url[0];
-        this.price = item.price[0];
-        this.currencyId = item.currencyId[0];
-        this.categoryId = item.categoryId[0];
-        this.description = item.description[0];
-        this.delivery = item.delivery[0];
-        this.name = item.name[0];
-        this.priceRetail = item.priceRetail[0];
-        if(item.vendor && Array.isArray(item.vendor)){
-            this.vendor = item.vendor[0];
-        }
-        if(item.article && Array.isArray(item.article)){
-            this.article = item.article[0];
-        }
-        this.picture = [item.picture[0]];
         if(item.pictures && Array.isArray(item.pictures)){
-            this.picture = [...this.picture,...item.pictures[0].picture].toString().split(',').join(',\n');
+            this.picture = [...item.picture,...item.pictures[0].picture].toString().split(',').join(',\n');
         }
-        this.barcode = item.barcode[0];
-        this.adult = item.adult[0];
-
     }
 }
 
