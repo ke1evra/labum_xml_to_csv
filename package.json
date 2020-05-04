@@ -1,0 +1,21 @@
+{
+  "name": "labum_xml_to_csv",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "csv-writer": "^1.6.0",
+    "eyes": "^0.1.8",
+    "i": "^0.3.6",
+    "moment": "^2.25.1",
+    "npm": "^6.14.4",
+    "xml2js": "^0.4.23"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "run": "node index.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
